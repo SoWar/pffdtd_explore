@@ -15,8 +15,8 @@
 import numpy as np
 from numpy import array as npa
 import numpy.linalg as npl
-from numpy import cos, sin, pi
-from typing import Any, Optional
+from numpy import cos,sin,pi
+from typing import Any,Optional
 from common.myasserts import assert_np_array_float, assert_np_array_complex
 from pathlib import Path
 import struct
@@ -161,20 +161,8 @@ def ind2sub3d(ii,Nx,Ny,Nz):
     ix = ((ii - iz)//Nz-iy)//Ny
     return ix,iy,iz
 
-def rel_diff(x0, x1):  # relative difference at machine epsilon level
-    """Return the relative difference ``(x0 - x1) / 2**floor(log2(abs(x0)))``.
-
-    ``np.log2`` is undefined for zero or negative values, so ``abs(x0)`` is
-    used and a denominator of ``1`` is forced when ``x0`` is ``0``.  This
-    prevents ``nan``/``inf`` results when comparing values close to zero.
-    """
-
-    x0 = np.asarray(x0, dtype=np.float64)
-    absx0 = np.abs(x0)
-    absx0_safe = np.where(absx0 == 0, 1.0, absx0)
-    denom = 2.0 ** np.floor(np.log2(absx0_safe))
-    denom = np.where(denom == 0, 1.0, denom)
-    return (x0 - x1) / denom
+def rel_diff(x0,x1): #relative difference at machine epsilon level
+    return (x0-x1)/(2.0**np.floor(np.log2(x0)))
 
 def get_default_nprocs():
     return max(1,int(0.8*mp.cpu_count()))
